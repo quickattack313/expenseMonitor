@@ -38,21 +38,8 @@ ui <- page_fillable(
             data_upload_ui('Upload'),
             preview_validation_ui('Preview_Validation')
         ),
-        nav_panel("2. Filters", "Page B content"),
-        nav_panel("3. Statistics", "Page C content"),
-        nav_panel("4. Visual Analytics", 
-                  visual_analytics_ui('Visual_Analytics'),
-                  
-                  "Page D content"),
-        nav_menu(
-            "Other links",
-            nav_panel("D", "Panel D content"),
-            "----",
-            "Description:",
-            nav_item(a(
-                "Shiny", href = "https://shiny.posit.co", target = "_blank"
-            )),
-        ),
+        nav_panel("2. Visual Analytics", 
+                  visual_analytics_ui('Visual_Analytics'))
     ),
     id = "tab"
 )

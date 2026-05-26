@@ -6,8 +6,8 @@ visual_analytics_ui <- function(id) {
                    start  = "2024-12-01",
                    end    = "2025-01-31",
                    format = "dd/mm/yy"),
-    plotlyOutput(ns('plot1'), height = "600px"),
-    plotlyOutput(ns('plot2'), height = "600px"),
+    plotlyOutput(ns('plot1'), height = "600px")#,
+    #plotlyOutput(ns('plot2'), height = "600px"),
   )
 }
 
@@ -103,7 +103,7 @@ visual_analytics_server <- function(id, data) {
         df2 <- df2 %>%
           complete(Date = seq.Date(calendar_start, calendar_end, by = "day"))
         
-        browser()
+        #browser()
         df2 <- df2 %>% 
           mutate(weekday = wday(Date, label = T, week_start = 1),
                  month = month(Date, label = T),
