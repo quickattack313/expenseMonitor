@@ -1,2 +1,2 @@
 # expenseMonitor
-expenseMonitor - simple tool to analyse your receipts
+Simple tool to analyse your receipts
