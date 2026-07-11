@@ -1,0 +1,32 @@
+Package: expenseMonitor
+Title: Analyse and Visualise Personal Receipts
+Version: 0.1.0
+Authors@R:
+    person("Marta", "Wojnowska", email = "quickattack313@gmail.com", role = c("aut", "cre"))
+Description: A Shiny application for uploading, validating, and visualising
+    personal expense data extracted from receipts. Users upload a CSV or
+    Excel file, the data is checked against a set of required columns and
+    value constraints, and validated records can be explored through
+    interactive visual analytics.
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    bsicons,
+    bslib,
+    calendR,
+    dplyr,
+    ggplot2,
+    lubridate,
+    magrittr,
+    plotly,
+    readr,
+    readxl,
+    shiny,
+    shinyFeedback,
+    tidyr,
+    tools
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
