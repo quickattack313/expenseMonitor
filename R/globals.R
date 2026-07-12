@@ -4,9 +4,8 @@
 utils::globalVariables(c(
   "Id", "date_raw", "Date", "Receipt_no", "Price", "Expenses",
   "gradient_fill", "Item", "Text", "Var_order", "Tooltip_text",
-  "weekday", "month", "day", "week", "monthweek"
+  "weekday", "month", "week"
 ))
 
-#' @importFrom stats runif
 #' @importFrom utils head
 NULL

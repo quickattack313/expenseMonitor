@@ -34,9 +34,20 @@
 #'   Price = 5, Amount = 1
 #' )
 #' data_validate(df)
+#' Required receipt columns
+#'
+#' Single source of truth for the expected receipts schema, shared by
+#' \code{\link{data_validate}} and the upload page's column hint.
+#'
+#' @return Character vector of required column names.
+#' @noRd
+required_columns <- function() {
+  c('Id', 'Store', 'Item', 'Price', 'Amount')
+}
+
 data_validate <- function(df) {
 
-  req_cols <- c('Id', 'Store', 'Item', 'Price', 'Amount')
+  req_cols <- required_columns()
   mis_cols <- setdiff(req_cols, colnames(df))
   if (length(mis_cols) > 0) {
     return(

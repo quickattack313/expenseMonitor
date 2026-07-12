@@ -1,23 +1,34 @@
 #' Data upload module UI
 #'
+#' Rendered as a centered "dropzone" card on the Upload page, followed
+#' immediately by the required-columns hint. Below that sits a success
+#' banner that only appears once a file has actually been processed
+#' successfully, showing the file name.
+#'
 #' @param id Module namespace id.
 #'
-#' @return A `tagList` with a file input and an upload button.
+#' @return A `tagList` with a file input, an upload button, the
+#'   required-columns hint, and the upload-status banner.
 #' @export
 #' @import shiny
-#' @import bslib
 data_upload_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    card(
-      card_header('Upload'),
-      card_body(
-        fill = TRUE,
-        max_height = 600,
-        fileInput(ns('data_file'), 'Choose CSV or Excel File', accept = c('.xlsx', '.csv')),
+    div(
+      class = "upload-dropzone",
+      tags$p(class = "upload-hint", "Drag a file here or click to browse"),
+      div(
+        class = "upload-input-row",
+        fileInput(ns('data_file'), NULL, accept = c('.xlsx', '.csv')),
         actionButton(ns('upload_button'), 'Upload!')
       )
-    )
+    ),
+    tags$p(
+      class = "upload-columns-hint",
+      bsicons::bs_icon("info-circle"),
+      sprintf(" Required columns: %s", paste(required_columns(), collapse = ", "))
+    ),
+    uiOutput(ns('upload_status'))
   )
 }
 
@@ -64,8 +75,27 @@ data_upload_server <- function(id) {
 
       })
 
+      uploaded_name <- reactiveVal(NULL)
+
       observeEvent(input$data_file, {
         hideFeedback('data_file')
+        uploaded_name(NULL)
+      })
+
+      observeEvent(input$upload_button, {
+        d <- tryCatch(data(), error = function(e) NULL)
+        if (!is.null(d)) {
+          uploaded_name(input$data_file$name)
+        }
+      })
+
+      output$upload_status <- renderUI({
+        req(uploaded_name())
+        div(
+          class = "upload-success-box",
+          bsicons::bs_icon("check-circle", class = "upload-success-icon"),
+          div(class = "upload-success-text", sprintf("%s uploaded successfully!", uploaded_name()))
+        )
       })
 
       return(data)
