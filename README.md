@@ -24,8 +24,11 @@ run_app()
 ```
 
 Expected input columns: `Id`, `Store`, `Item`, `Price` (numeric, > 0),
-`Amount` (numeric, > 0). A sample file is bundled at
-`system.file("extdata", "receipts_test.xlsx", package = "expenseMonitor")`.
+`Amount` (numeric, > 0).
+
+To try the app without your own data, upload the sample file bundled at
+`system.file("extdata", "receipts_test.xlsx", package = "expenseMonitor")`
+on the Upload page.
 
 ## Live demo
 

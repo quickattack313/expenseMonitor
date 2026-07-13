@@ -34,6 +34,10 @@ app_palette <- function() {
 #' @noRd
 app_theme <- function() {
   pal <- app_palette()
+  # Matches the computed background of .bslib-page-title (the dark bar
+  # at the top of the page), which bslib derives automatically and
+  # isn't one of our own palette values.
+  title_bar_hex <- "434D44"
 
   theme <- bs_theme(
     version = 5,
@@ -119,10 +123,23 @@ app_theme <- function() {
     }
 
     h4 {
+      position: relative;
       display: inline-block;
-      border-bottom: 1px solid %s;
-      padding-bottom: 0.3rem;
+      padding-bottom: 0.4rem;
       margin-bottom: 1.5rem;
+    }
+    h4::after {
+      content: '';
+      position: absolute;
+      left: -2px;
+      right: -12px;
+      bottom: 0;
+      height: 16px;
+      pointer-events: none;
+      background-image: url(\"data:image/svg+xml,%%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 26' preserveAspectRatio='none'%%3E%%3Cdefs%%3E%%3ClinearGradient id='penFade' x1='0' y1='0' x2='1' y2='0'%%3E%%3Cstop offset='0%%25' stop-color='%%23%s' stop-opacity='1'/%%3E%%3Cstop offset='65%%25' stop-color='%%23%s' stop-opacity='0.85'/%%3E%%3Cstop offset='100%%25' stop-color='%%23%s' stop-opacity='0.15'/%%3E%%3C/linearGradient%%3E%%3C/defs%%3E%%3Cpath d='M10,13 Q150,2 296,19 L296,20 Q150,4 10,19 A3,3 0 0 1 10,13 Z' fill='url(%%23penFade)'/%%3E%%3C/svg%%3E\");
+      background-repeat: no-repeat;
+      background-position: center bottom;
+      background-size: 100%% 16px;
     }
 
     table.dataTable {
@@ -313,7 +330,7 @@ app_theme <- function() {
   ",
     pal$light_bg, pal$light_sidebar, pal$light_fg, pal$light_card,
     pal$primary, pal$primary,
-    pal$warning, pal$light_sidebar,
+    title_bar_hex, title_bar_hex, title_bar_hex, pal$light_sidebar,
     pal$success, pal$success,
     pal$warning, pal$warning,
     pal$primary, pal$primary,
