@@ -1,14 +1,32 @@
+#' Locate the bundled sample receipts file
+#'
+#' Works whether or not the app is running as an installed package:
+#' `system.file()` finds it when expenseMonitor is installed, and this
+#' falls back to a path relative to the working directory otherwise
+#' (e.g. Posit Connect Cloud's git-based deploys, which run app.R
+#' directly against the loose repo checkout -- see `app.R`).
+#'
+#' @return Path to `receipts_test.xlsx`.
+#' @noRd
+sample_file_path <- function() {
+  installed_path <- system.file("extdata", "receipts_test.xlsx", package = "expenseMonitor")
+  if (nzchar(installed_path)) return(installed_path)
+  file.path("inst", "extdata", "receipts_test.xlsx")
+}
+
 #' Data upload module UI
 #'
-#' Rendered as a centered "dropzone" card on the Upload page, followed
-#' immediately by the required-columns hint. Below that sits a success
-#' banner that only appears once a file has actually been processed
-#' successfully, showing the file name.
+#' Rendered as a centered "dropzone" card on the Upload page, with a
+#' "Try with example data..." link below the Browse/Upload row that
+#' loads the bundled sample file directly (no real upload needed).
+#' Followed by the required-columns hint, then a success banner that
+#' only appears once a file has actually been processed successfully.
 #'
 #' @param id Module namespace id.
 #'
 #' @return A `tagList` with a file input, an upload button, the
-#'   required-columns hint, and the upload-status banner.
+#'   example-data shortcut, the required-columns hint, and the
+#'   upload-status banner.
 #' @export
 #' @import shiny
 data_upload_ui <- function(id) {
@@ -21,7 +39,8 @@ data_upload_ui <- function(id) {
         class = "upload-input-row",
         fileInput(ns('data_file'), NULL, accept = c('.xlsx', '.csv')),
         actionButton(ns('upload_button'), 'Upload!')
-      )
+      ),
+      actionButton(ns('try_example'), 'Try with example data...', class = "upload-try-example")
     ),
     tags$p(
       class = "upload-columns-hint",
@@ -35,8 +54,9 @@ data_upload_ui <- function(id) {
 #' Data upload module server
 #'
 #' Reads the uploaded CSV or Excel file into a tibble when the upload
-#' button is clicked. Unsupported file extensions surface a
-#' \pkg{shinyFeedback} warning instead of failing silently.
+#' button is clicked, or loads the bundled sample file when "Try with
+#' example data..." is clicked instead. Unsupported file extensions
+#' surface a \pkg{shinyFeedback} warning instead of failing silently.
 #'
 #' @param id Module namespace id.
 #'
@@ -52,17 +72,22 @@ data_upload_server <- function(id) {
     id,
     function(input, output, session) {
 
-      data <- eventReactive(input$upload_button, {
+      data_val <- reactiveVal(NULL)
+      uploaded_name <- reactiveVal(NULL)
+
+      observeEvent(input$upload_button, {
         req(input$data_file)
         ext <- input$data_file$name %>% file_ext()
 
         if (ext == 'csv'){
           hideFeedback('data_file')
-          return(input$data_file$datapath %>% readr::read_csv() %>% as_tibble())
+          data_val(input$data_file$datapath %>% readr::read_csv() %>% as_tibble())
+          uploaded_name(input$data_file$name)
 
         } else if (ext == 'xlsx') {
           hideFeedback('data_file')
-          return(input$data_file$datapath %>% readxl::read_excel() %>% as_tibble())
+          data_val(input$data_file$datapath %>% readxl::read_excel() %>% as_tibble())
+          uploaded_name(input$data_file$name)
 
         }
         else{
@@ -70,23 +95,18 @@ data_upload_server <- function(id) {
             inputId = 'data_file',
             text = 'Read CSV or Excel file!'
           )
-          return(NULL)
         }
 
       })
 
-      uploaded_name <- reactiveVal(NULL)
+      observeEvent(input$try_example, {
+        data_val(sample_file_path() %>% readxl::read_excel() %>% as_tibble())
+        uploaded_name("receipts_test.xlsx")
+      })
 
       observeEvent(input$data_file, {
         hideFeedback('data_file')
         uploaded_name(NULL)
-      })
-
-      observeEvent(input$upload_button, {
-        d <- tryCatch(data(), error = function(e) NULL)
-        if (!is.null(d)) {
-          uploaded_name(input$data_file$name)
-        }
       })
 
       output$upload_status <- renderUI({
@@ -98,7 +118,7 @@ data_upload_server <- function(id) {
         )
       })
 
-      return(data)
+      return(data_val)
 
   })
 }

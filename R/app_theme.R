@@ -282,6 +282,20 @@ app_theme <- function() {
       border-top-right-radius: 0 !important;
       border-bottom-right-radius: 0 !important;
     }
+    .upload-try-example {
+      display: block;
+      margin: 0.85rem auto 0;
+      background: none !important;
+      border: none !important;
+      color: var(--app-fg) !important;
+      opacity: 0.6;
+      text-decoration: underline;
+      font-weight: 400;
+      padding: 0;
+    }
+    .upload-try-example:hover {
+      opacity: 1;
+    }
     .upload-input-row .input-group > .form-control {
       border-radius: 0 !important;
     }
