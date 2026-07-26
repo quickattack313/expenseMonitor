@@ -32,7 +32,7 @@ on the Upload page.
 
 ## Live demo
 
-Deployed on shinyapps.io: _link to be added after deployment_.
+Deployed on shinyapps.io:https://019f5d05-54a4-c8ab-6d18-f898d6de2f72.share.connect.posit.cloud/
 
 ## Project structure
 
