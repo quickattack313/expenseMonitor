@@ -1,0 +1,12 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^docs$
+^\.Rhistory$
+^\.RData$
+^\.Ruserdata$
+^README\.md$
+^NEWS\.md$
+^\.git$
+^\.gitignore$
+^\.claude$
+^LICENSE$
